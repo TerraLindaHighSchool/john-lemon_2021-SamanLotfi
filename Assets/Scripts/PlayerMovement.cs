@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Animator animator;
     private Rigidbody rb;
-    private Vector3 mveDirction;
+    private Vector3 moveDirection;
     private Quaternion rotation;
     private bool isWalking;
 
@@ -33,6 +33,12 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 desiredDirection = Vector3.RotateTowards(transform.position, moveDirection, turnSpeed * Time.deltaTime, 0f);
         rotation = Quaternion.LookRotation(desiredDirection);
+    }
+
+    private void OnAnimatorMove()
+    {
+        rb.MovePosition(rb.position + moveDirection * animator.deltaPosition.magnitude);
+        rb.MoveRotation(rotation);
     }
 
     // Update is called once per frame
