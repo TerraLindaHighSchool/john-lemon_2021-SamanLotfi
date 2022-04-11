@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -12,11 +13,24 @@ public class PlayerMovement : MonoBehaviour
     Vector3 m_Movement;
     Quaternion m_Rotation = Quaternion.identity;
 
+    public TextMeshProUGUI countText;
+	public GameObject winTextObject;
+    private Rigidbody rb;
+    private int count;
+
     void Start ()
     {
         m_Animator = GetComponent<Animator> ();
         m_Rigidbody = GetComponent<Rigidbody> ();
         m_AudioSource = GetComponent<AudioSource> ();
+
+        rb = GetComponent<Rigidbody>();
+
+        count = 0;
+
+        SetCountText();
+
+        winTextObject.SetActive(false);
     }
 
     void FixedUpdate ()
@@ -52,5 +66,27 @@ public class PlayerMovement : MonoBehaviour
     {
         m_Rigidbody.MovePosition (m_Rigidbody.position + m_Movement * m_Animator.deltaPosition.magnitude);
         m_Rigidbody.MoveRotation (m_Rotation);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Cake"))
+        {
+            other.gameObject.SetActive(false);
+
+            count = count + 1;
+
+            SetCountText();
+        }
+    }
+
+    void SetCountText()
+    {
+        countText.text = "Count: " + count.ToString();
+
+        if (count >= 1)
+        {
+            winTextObject.SetActive(true);
+        }
     }
 }
